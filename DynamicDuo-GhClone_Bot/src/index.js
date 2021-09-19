@@ -2,8 +2,8 @@ require('dotenv')
 const express = require('express')
 const axios = require("axios");
 const app = express()
-app.use(express.json())
 
+app.use(express.json())
 const BOT_TOKEN = process.env.BOT_TOKEN
 
 const TELEGRAM_API = 'https://api.telegram.org/bot' + BOT_TOKEN
@@ -17,13 +17,13 @@ app.post('/', (req,res) => {
 
         const chatId = req.body.message.chat.id;
         const sentMessage = req.body.message.text;
-        let helpMessage = 'To download Repo send\ndl author repo_name branch_name\neg: dl darkphoenix2704 discowin main';
+        let helpMessage = 'To check if repo is valid or not, send\nverify author repo_name branch_name\neg: verify darkphoenix2704 discowin';
         if (sentMessage === '/start') {
             axios.post(TELEGRAM_API + '/sendMessage',
                 {
                     chat_id: chatId,
-                    text: 'Hii 👋\nI\' am GhCLoneBot \nI will send you the github repo as zip\nSend me the dl author_name repo_name and Branch_name' +
-                        '\neg:- dl microg gmscore master\nType help to all commands'
+                    text: 'Hii 👋\nI\' am GhValidatorBot \nI will check if repo is valid or not \nSend me verify author_name repo_name ' +
+                        '\neg:- verify microg gmscore\nType help to all commands'
                 })
                 .then((response) => {
                     res.status(200).send(response);
@@ -48,33 +48,29 @@ app.post('/', (req,res) => {
             const args = sentMessage.slice('dl'.length).trim().split(/ +/);
             let author = args[0]
             let repo = args[1]
-            let branch = args[2]
             let url = GITHUB_API + '/repos/' + author + '/' + repo
-            console.log(url)
             axios.get(url,{
                 headers:{
                     Accept: 'application/vnd.github.v3+json'
                 }
-            }).then((resp) => {
+            }).then(() => {
                 console.log('Valid Repo')
                 axios.post(TELEGRAM_API + '/sendMessage',
                     {
                         chat_id: chatId,
-                        text: 'It is a Valid Repo\nPlease wait a minute'
+                        text: 'It is a Valid Repo'
                     })
-                    .then((response) => {
-                        res.status(200).send(response);
+                    .then(async (response) => {
+                        console.log(response)
                     }).catch((error) => {
                     console.log(error)
                     res.send(error);
                 });
-
-            }).catch((error) => {
-                console.log('Not Valid repo')
+            }).catch(() => {
                 axios.post(TELEGRAM_API + '/sendMessage',
                     {
                         chat_id: chatId,
-                        text: 'Enter a Valid Repo'
+                        text: 'This repo doesn\'t exists'
                     })
                     .then((response) => {
                         res.status(200).send(response);
@@ -83,13 +79,10 @@ app.post('/', (req,res) => {
                     res.send(error);
                 });
             })
-            //res.status(200).send({});
         }
     }
 
 })
-
-
 app.listen(80, ()=> {
     console.log('🚀 app running on port', 80)
 })
