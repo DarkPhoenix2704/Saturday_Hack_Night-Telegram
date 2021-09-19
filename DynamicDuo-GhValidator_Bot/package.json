@@ -1,5 +1,5 @@
 {
-  "name": "ghclone_bot",
+  "name": "gh_validator_bot",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
