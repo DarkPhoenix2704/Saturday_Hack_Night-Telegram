@@ -4,10 +4,12 @@
 
 GhValidator is a telegram bot which can verify the existence of a GitHub repo
 
-#Available Commands
-##help
+## Available Commands
+
+### help
 Shows help
-##verify author repo
+
+### verify author repo
 Verifies if the repo exists
 
 ## Requirements
