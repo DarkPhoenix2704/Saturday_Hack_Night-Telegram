@@ -43,9 +43,9 @@ app.post('/', (req,res) => {
                     console.log(error)
                 res.send(error);
             });
-        } else if(sentMessage.startsWith('dl')){
+        } else if(sentMessage.startsWith('verify')){
             console.log('DL Loading')
-            const args = sentMessage.slice('dl'.length).trim().split(/ +/);
+            const args = sentMessage.slice('verify'.length).trim().split(/ +/);
             let author = args[0]
             let repo = args[1]
             let url = GITHUB_API + '/repos/' + author + '/' + repo
